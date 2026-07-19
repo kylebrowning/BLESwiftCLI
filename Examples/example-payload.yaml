@@ -1,0 +1,13 @@
+# Example structured payload for `ble write --payload`.
+# JSON works too — the same decoder parses both.
+service: 180F
+characteristic: 2A19
+writeType: withResponse
+fields:
+  - { type: u8,     value: 1 }
+  - { type: u16le,  value: 5000 }
+  - { type: u16be,  value: 5000 }
+  - { type: i32le,  value: -70 }
+  - { type: string, value: "hi" }
+  - { type: hex,    value: "DEADBEEF" }
+  - { type: pad,    length: 2 }

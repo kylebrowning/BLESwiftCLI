@@ -1,0 +1,13 @@
+# Structured payload for the BLE-Testbed's echo characteristic: the firmware
+# notifies these exact bytes back on the REPLY characteristic, so
+#   ble write BLE-Testbed -p Examples/testbed-echo.yaml \
+#     --expect-reply-on B1E57E57-0003-4000-A000-1E57BED00001
+# proves the round-trip end to end.
+service: B1E57E57-0001-4000-A000-1E57BED00001
+characteristic: B1E57E57-0002-4000-A000-1E57BED00001
+fields:
+  - { type: u8,     value: 1 }         # message id
+  - { type: u16le,  value: 5000 }      # a little-endian parameter
+  - { type: varint, value: 1411519 }   # a protobuf-style varint
+  - { type: string, value: "hi" }      # text
+  - { type: hex,    value: "DEADBEEF" }

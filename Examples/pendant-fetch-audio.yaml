@@ -1,0 +1,38 @@
+# Pendant "fetch audio" trigger — the protobuf command the device's companion
+# tooling sends to start streaming the recording buffer over notifications on
+# 632DE003-604C-446B-A80F-7963E950F3FB.
+#
+# Wire layout (field numbers reverse-engineered in Archive_mini/ble/Pendant.swift):
+#   f1 = 3            command: fetch audio
+#   f3 = 1
+#   f4 {              length-delimited envelope
+#     f8 {            length-delimited request
+#       f1=1  f2=1  f3=1
+#       f6 = <byte offset into the circular recording buffer; 0 = full buffer>
+#     }
+#   }
+#
+# The two length bytes (0A and 08) are hand-encoded for a 1-byte offset varint
+# (offset ≤ 127). A larger offset makes the f6 varint longer — bump both
+# lengths by the extra bytes.
+#
+# Usage:
+#   ble write Pendant -p Examples/pendant-fetch-audio.yaml \
+#     --expect-reply-on 632DE003-604C-446B-A80F-7963E950F3FB
+service: 632DE001-604C-446B-A80F-7963E950F3FB
+characteristic: 632DE002-604C-446B-A80F-7963E950F3FB
+fields:
+  - { type: hex,    value: "08" }   # f1 tag (varint)
+  - { type: varint, value: 3 }      # f1 = 3 — fetch audio
+  - { type: hex,    value: "18" }   # f3 tag (varint)
+  - { type: varint, value: 1 }      # f3 = 1
+  - { type: hex,    value: "220A" } # f4 tag (len-delimited), length 10
+  - { type: hex,    value: "4208" } # f8 tag (len-delimited), length 8
+  - { type: hex,    value: "08" }   # f8.f1 tag
+  - { type: varint, value: 1 }      # f8.f1 = 1
+  - { type: hex,    value: "10" }   # f8.f2 tag
+  - { type: varint, value: 1 }      # f8.f2 = 1
+  - { type: hex,    value: "18" }   # f8.f3 tag
+  - { type: varint, value: 1 }      # f8.f3 = 1
+  - { type: hex,    value: "30" }   # f8.f6 tag
+  - { type: varint, value: 0 }      # f8.f6 = buffer offset 0 (full buffer)

@@ -1,0 +1,42 @@
+{
+  "originHash" : "ca17aabc49251c13f7de65ce23bbc5ce0251fb4800e07085d9e5274e95e1123b",
+  "pins" : [
+    {
+      "identity" : "bleswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kylebrowning/BLESwift.git",
+      "state" : {
+        "revision" : "3b885864cc530ad60496bdcb6c4af1fe6512a281",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+        "version" : "1.8.2"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "a878e7f8f46cfc0e1125e565b5c08e7d5272dc9a",
+        "version" : "1.14.0"
+      }
+    },
+    {
+      "identity" : "yams",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/Yams.git",
+      "state" : {
+        "revision" : "a27b21e0c81c5bf42049b897a62aaf387e80f279",
+        "version" : "6.2.2"
+      }
+    }
+  ],
+  "version" : 3
+}
