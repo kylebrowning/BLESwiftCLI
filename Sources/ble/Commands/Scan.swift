@@ -6,8 +6,9 @@ struct Scan: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "Scan for nearby BLE peripherals.",
         discussion: """
-        Prints one line per sighting: the peripheral's UUID (use it with
-        `ble connect`), RSSI, name, advertised services, and manufacturer data.
+        Prints one table row per sighting: name, RSSI (colored by strength),
+        the peripheral's UUID (use it with `ble connect`), advertised services,
+        and manufacturer data. Colors turn off when piped or under NO_COLOR.
         """
     )
 
@@ -51,6 +52,9 @@ struct Scan: AsyncParsableCommand {
             ?? "for all peripherals"
         scope += duration.map { _ in " (\(Int(timeout))s)" } ?? " (Ctrl-C to stop)"
         status("Scanning \(scope)…")
+        if !json {
+            status(Format.discoveryHeader())
+        }
 
         let emitJSON = json
         let minRSSI = minRssi
@@ -71,7 +75,7 @@ struct Scan: AsyncParsableCommand {
                     if emitJSON {
                         print(try ScanRecord(marker: marker, discovery: discovery).jsonLine())
                     } else {
-                        print(Format.discoveryLine(marker: marker, discovery))
+                        print(Format.discoveryRow(marker: marker, discovery))
                     }
                     fflush(stdout)
                 }

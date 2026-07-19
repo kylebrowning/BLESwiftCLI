@@ -1,30 +1,82 @@
 import BLESwift
 import Foundation
 
+/// Minimal ANSI styling for stdout, on only when stdout is an interactive terminal
+/// (so piped output stays plain), and honoring the NO_COLOR convention.
+enum Style {
+    static let enabled: Bool =
+        isatty(STDOUT_FILENO) == 1
+        && ProcessInfo.processInfo.environment["NO_COLOR"] == nil
+        && ProcessInfo.processInfo.environment["TERM"] != "dumb"
+
+    private static func apply(_ code: Int, to text: String) -> String {
+        enabled ? "\u{1B}[\(code)m\(text)\u{1B}[0m" : text
+    }
+
+    static func bold(_ text: String) -> String { apply(1, to: text) }
+    static func dim(_ text: String) -> String { apply(2, to: text) }
+    static func red(_ text: String) -> String { apply(31, to: text) }
+    static func green(_ text: String) -> String { apply(32, to: text) }
+    static func yellow(_ text: String) -> String { apply(33, to: text) }
+    static func cyan(_ text: String) -> String { apply(36, to: text) }
+}
+
 enum Format {
     static func hex(_ data: Data) -> String {
         data.map { String(format: "%02X", $0) }.joined()
     }
 
-    /// "+ <uuid>  -58 dBm  Name  [180D 180F]"
-    static func discoveryLine(marker: String, _ discovery: Discovery) -> String {
+    /// Fixed column widths for the scan table. UUID strings are always 36 characters.
+    static let nameColumnWidth = 26
+    private static let uuidColumnWidth = 36
+
+    /// Left-aligns `text` in a `width`-character cell, truncating with an ellipsis.
+    /// Pad *before* styling — ANSI escapes would otherwise count toward the width.
+    static func pad(_ text: String, to width: Int) -> String {
+        guard text.count <= width else { return text.prefix(width - 1) + "…" }
+        return text + String(repeating: " ", count: width - text.count)
+    }
+
+    /// Column header matching ``discoveryRow(marker:_:)`` — print it to stderr so
+    /// stdout stays pure data.
+    static func discoveryHeader() -> String {
+        Style.dim("   " + pad("NAME", to: nameColumnWidth) + "  RSSI  " + pad("UUID", to: uuidColumnWidth) + "  DETAILS")
+    }
+
+    /// "+  Name         -58  <uuid>  [180D 180F]" — name first, RSSI colored by
+    /// strength, UUID dimmed, services/manufacturer data as a free-form tail.
+    static func discoveryRow(marker: String, _ discovery: Discovery) -> String {
+        let markerStyled = switch marker {
+        case "+": Style.green(marker)
+        case "~": Style.yellow(marker)
+        default: Style.red(marker)
+        }
+
+        let name = pad(bestName(for: discovery), to: nameColumnWidth)
+        let nameStyled = marker == "-" ? Style.dim(name) : Style.bold(name)
+
+        let rssiText = String(format: "%4d", discovery.rssi)
+        let rssiStyled = discovery.rssi >= -60 ? Style.green(rssiText)
+            : discovery.rssi >= -75 ? Style.yellow(rssiText)
+            : Style.red(rssiText)
+
         var parts = [
-            marker,
-            discovery.peripheral.uuid.uuidString,
-            String(format: "%4d dBm", discovery.rssi),
-            bestName(for: discovery),
+            markerStyled,
+            nameStyled,
+            rssiStyled,
+            Style.dim(discovery.peripheral.uuid.uuidString),
         ]
         if let services = discovery.advertisement.serviceUUIDs, !services.isEmpty {
             let labels = services.map { service in
                 service.name.map { "\(service.uuidString)/\($0)" } ?? service.uuidString
             }
-            parts.append("[\(labels.joined(separator: " "))]")
+            parts.append(Style.cyan("[\(labels.joined(separator: " "))]"))
         }
         if let manufacturerData = discovery.advertisement.manufacturerData {
-            parts.append("mfr=0x\(hex(manufacturerData))")
+            parts.append(Style.dim("mfr=0x\(hex(manufacturerData))"))
         }
         if discovery.advertisement.isConnectable == false {
-            parts.append("(not connectable)")
+            parts.append(Style.dim("(not connectable)"))
         }
         return parts.joined(separator: "  ")
     }

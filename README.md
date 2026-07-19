@@ -48,9 +48,11 @@ ble scan --min-rssi -70           # only strong signals
 ble scan --json                   # JSON lines, for scripting
 ```
 
-Each line shows the peripheral UUID (what you pass to `connect`/`pair`), RSSI,
-name, advertised services (standard ones labeled, e.g. `180F/Battery`), and
-manufacturer data.
+Output is a table, one row per sighting: name, RSSI colored by signal strength
+(green/yellow/red), the peripheral UUID (what you pass to `connect`/`pair`,
+dimmed), advertised services (standard ones labeled, e.g. `180F/Battery`), and
+manufacturer data. Colors turn off automatically when stdout is piped, and
+respect `NO_COLOR`.
 
 ### `ble connect`
 
