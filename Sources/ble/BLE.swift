@@ -11,7 +11,7 @@ struct BLE: AsyncParsableCommand {
         The first run may prompt for Bluetooth access; grant it to your terminal
         app under System Settings > Privacy & Security > Bluetooth.
         """,
-        version: "1.0.0",
+        version: "1.1.0",
         subcommands: [Scan.self, Connect.self, Pair.self, Inspect.self, ReadValue.self, WriteValue.self, L2CAP.self]
     )
 }
