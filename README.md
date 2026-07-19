@@ -48,7 +48,11 @@ ble scan --min-rssi -70           # only strong signals
 ble scan --json                   # JSON lines, for scripting
 ```
 
-Output is a table, one row per sighting: name, RSSI colored by signal strength
+On a terminal, `ble scan` shows a **live table sorted by signal strength**
+(closest first), updating in place as advertisements arrive — the sort key is
+lightly smoothed so the order tracks sustained changes instead of jittering.
+When piped, with `--stream`, or with `--json`, it prints one append-only line
+per sighting instead. Columns: name, RSSI colored by signal strength
 (green/yellow/red), the peripheral UUID (what you pass to `connect`/`pair`,
 dimmed), advertised services (standard ones labeled, e.g. `180F/Battery`), and
 manufacturer data. Colors turn off automatically when stdout is piped, and

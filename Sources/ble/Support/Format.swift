@@ -49,7 +49,8 @@ enum Format {
         let markerStyled = switch marker {
         case "+": Style.green(marker)
         case "~": Style.yellow(marker)
-        default: Style.red(marker)
+        case "-": Style.red(marker)
+        default: marker
         }
 
         let name = pad(bestName(for: discovery), to: nameColumnWidth)
