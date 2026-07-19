@@ -6,7 +6,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kylebrowning/BLESwift.git",
       "state" : {
-        "revision" : "255a8a2ba9d34d01a3e40c8714d6ffe8b0f10ce8",
+        "revision" : "bb137fe78f36dcfa3f5280debcb43b2b0f75815e",
         "version" : "1.0.0"
       }
     },
