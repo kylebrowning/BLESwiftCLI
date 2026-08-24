@@ -114,6 +114,8 @@ private extension ConnectionEvent {
             id
         case .disconnected(let id, error: _, willReconnect: _):
             id
+        case .notificationsRestored(let id, restored: _, failed: _):
+            id
         }
     }
 }

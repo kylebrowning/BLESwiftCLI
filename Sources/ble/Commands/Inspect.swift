@@ -40,6 +40,9 @@ struct Inspect: AsyncParsableCommand {
     @Flag(name: .shortAndLong, help: "Log BLESwift internals to stderr.")
     var verbose = false
 
+
+    @Flag(help: "Bypass strict GATT property checks — for peripherals that misreport their characteristic properties. Passes compatibility: .lenient to connect.")
+    var lenient = false
     func run() async throws {
         let serviceFilter = services.isEmpty ? nil : services.map(\.identifier)
         let dump = try await Session.withPeripheral(
@@ -47,7 +50,8 @@ struct Inspect: AsyncParsableCommand {
             services: serviceFilter,
             scanTimeout: scanTimeout,
             connectTimeout: timeout,
-            verbose: verbose
+            verbose: verbose,
+            compatibility: lenient ? .lenient : .strict
         ) { _, connected in
             try await gather(from: connected)
         }

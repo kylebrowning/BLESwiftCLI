@@ -16,6 +16,7 @@ enum Session {
         scanTimeout: Double,
         connectTimeout: Double,
         verbose: Bool,
+        compatibility: GATTCompatibility = .strict,
         body: (Central, Peripheral) async throws -> T
     ) async throws -> T {
         let central = Radio.makeCentral(verbose: verbose)
@@ -24,7 +25,9 @@ enum Session {
             query, central: central, services: services, scanTimeout: .seconds(scanTimeout)
         )
         status("Connecting to \(id.name) (\(id.uuid))…")
-        let peripheral = try await central.connect(id, timeout: .seconds(connectTimeout))
+        let peripheral = try await central.connect(
+            id, timeout: .seconds(connectTimeout), compatibility: compatibility
+        )
         do {
             let result = try await body(central, peripheral)
             try? await peripheral.disconnect()
