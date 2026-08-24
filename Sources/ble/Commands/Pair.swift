@@ -50,6 +50,9 @@ struct Pair: AsyncParsableCommand {
     @Flag(name: .shortAndLong, help: "Log BLESwift internals to stderr.")
     var verbose = false
 
+
+    @Flag(help: "Bypass strict GATT property checks — for peripherals that misreport their characteristic properties. Passes compatibility: .lenient to connect.")
+    var lenient = false
     func validate() throws {
         guard ServiceUUIDArgument.isValidBLEUUID(characteristic) else {
             throw ValidationError("'\(characteristic)' is not a valid Bluetooth UUID.")
@@ -65,7 +68,8 @@ struct Pair: AsyncParsableCommand {
             services: [service.identifier],
             scanTimeout: scanTimeout,
             connectTimeout: timeout,
-            verbose: verbose
+            verbose: verbose,
+            compatibility: lenient ? .lenient : .strict
         ) { _, connected in
             let target = CharacteristicIdentifier(uuid: characteristic, service: service.identifier)
             status("Accessing characteristic \(target.uuidString) — approve the pairing dialog if one appears…")

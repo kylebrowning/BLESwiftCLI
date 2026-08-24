@@ -69,6 +69,9 @@ struct WriteValue: AsyncParsableCommand {
     @Flag(name: .shortAndLong, help: "Log BLESwift internals to stderr.")
     var verbose = false
 
+
+    @Flag(help: "Bypass strict GATT property checks — for peripherals that misreport their characteristic properties. Passes compatibility: .lenient to connect.")
+    var lenient = false
     @Flag(help: "Encode and print the payload bytes without connecting or writing.")
     var dryRun = false
 
@@ -112,7 +115,8 @@ struct WriteValue: AsyncParsableCommand {
             services: [target.service],
             scanTimeout: scanTimeout,
             connectTimeout: timeout,
-            verbose: verbose
+            verbose: verbose,
+            compatibility: lenient ? .lenient : .strict
         ) { _, connected in
             if let descriptor {
                 let identifier = DescriptorIdentifier(uuid: descriptor, characteristic: target)
