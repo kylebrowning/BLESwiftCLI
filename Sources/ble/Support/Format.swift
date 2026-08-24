@@ -137,6 +137,11 @@ enum Format {
             if let error { line += ": \(error.localizedDescription)" }
             if willReconnect { line += " — will reconnect" }
             return line
+        case .notificationsRestored(let id, restored: let restored, failed: let failed):
+            var line = "↻ notifications restored on \(id.name) (\(restored.count) re-armed"
+            if !failed.isEmpty { line += ", \(failed.count) failed" }
+            line += ")"
+            return line
         }
     }
 }
