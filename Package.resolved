@@ -1,13 +1,13 @@
 {
-  "originHash" : "0d92f020500aee78bd26452a6e21dbc524181840a6fec93c18935b58a6d5d05b",
+  "originHash" : "bb4d69c4bacbc547892cf4ebd045c0ced801211cfc63e67895a71a4d1a5166b3",
   "pins" : [
     {
       "identity" : "bleswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kylebrowning/BLESwift.git",
       "state" : {
-        "revision" : "a3b9ac0bc5e8299c81a97616b3fbeb8ea009f28a",
-        "version" : "2.0.0"
+        "revision" : "2d46368188b4c212308fc2e5e5d094e0855ccc54",
+        "version" : "3.0.0"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "a878e7f8f46cfc0e1125e565b5c08e7d5272dc9a",
-        "version" : "1.14.0"
+        "revision" : "4038b6a4f74a1426f47eb1dd5b4bb5628a15d597",
+        "version" : "1.16.1"
       }
     },
     {

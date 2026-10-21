@@ -10,8 +10,8 @@ import Testing
 @Suite("Peripheral resolution")
 struct ResolverTests {
 
-    private func makeRig(_ label: String) -> (central: Central, fake: FakeCentral, queue: DispatchSerialQueue) {
-        let queue = DispatchSerialQueue(label: "bleTests.\(label)")
+    private func makeRig(_ label: String) -> (central: Central, fake: FakeCentral, queue: DispatchQueue) {
+        let queue = DispatchQueue(label: "bleTests.\(label)")
         let fake = FakeCentral(queue: queue)
         let central = Central(backend: fake, queue: queue)
         fake.simulateStateChange(.poweredOn)
@@ -111,7 +111,7 @@ struct RadioTests {
 
     @Test("poweredOn returns immediately")
     func poweredOn() async throws {
-        let queue = DispatchSerialQueue(label: "bleTests.radioPoweredOn")
+        let queue = DispatchQueue(label: "bleTests.radioPoweredOn")
         let fake = FakeCentral(queue: queue)
         let central = Central(backend: fake, queue: queue)
         fake.simulateStateChange(.poweredOn)
@@ -120,7 +120,7 @@ struct RadioTests {
 
     @Test("unauthorized fails with an actionable error")
     func unauthorized() async {
-        let queue = DispatchSerialQueue(label: "bleTests.radioUnauthorized")
+        let queue = DispatchQueue(label: "bleTests.radioUnauthorized")
         let fake = FakeCentral(queue: queue)
         let central = Central(backend: fake, queue: queue)
         fake.simulateStateChange(.unauthorized)
@@ -131,7 +131,7 @@ struct RadioTests {
 
     @Test("a late power-on is waited for")
     func latePowerOn() async throws {
-        let queue = DispatchSerialQueue(label: "bleTests.radioLatePowerOn")
+        let queue = DispatchQueue(label: "bleTests.radioLatePowerOn")
         let fake = FakeCentral(queue: queue)
         let central = Central(backend: fake, queue: queue)
         fake.simulateStateChange(.poweredOff)
@@ -144,7 +144,7 @@ struct RadioTests {
 
     @Test("never powering on times out with a CLIError")
     func neverPowersOn() async {
-        let queue = DispatchSerialQueue(label: "bleTests.radioNeverOn")
+        let queue = DispatchQueue(label: "bleTests.radioNeverOn")
         let fake = FakeCentral(queue: queue)
         let central = Central(backend: fake, queue: queue)
         await #expect(throws: CLIError.self) {
