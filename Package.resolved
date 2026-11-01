@@ -1,13 +1,13 @@
 {
-  "originHash" : "bb4d69c4bacbc547892cf4ebd045c0ced801211cfc63e67895a71a4d1a5166b3",
+  "originHash" : "94f8e2e37819c576c8acf0aaa47dd375f3969b6f67a9f44e6bd48cd35ab6040b",
   "pins" : [
     {
       "identity" : "bleswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kylebrowning/BLESwift.git",
       "state" : {
-        "revision" : "2d46368188b4c212308fc2e5e5d094e0855ccc54",
-        "version" : "3.0.0"
+        "revision" : "b00ece985e527db31188ba375c8686678d56700f",
+        "version" : "3.1.0"
       }
     },
     {
